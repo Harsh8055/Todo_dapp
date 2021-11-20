@@ -140,7 +140,7 @@ function App() {
           Add{" "}
         </Button>
 
-        { !connection && <Button className="my-2 float-right" style={{ margin: "5rem" }}  >
+        { !connection && <Button className="my-2 float-right" style={{ margin: "5rem" }} onClick={requestAccount} >
           
           Connect Wallet
         </Button> }
