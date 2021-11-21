@@ -82,36 +82,44 @@ function App() {
     await addTaskTxn.wait();
     console.log("added task succesfully");
     
-   requestAccount();
+  
    setBool(true);
   } 
 
   async function toggleTask(e) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
+ 
+    // let ethAccounts = await window.ethereum.request({method: "eth_requestAccounts",});
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
     
     const contractSigner = new ethers.Contract(contractAddress,Todo.abi,signer);
-   try {
-    const toggleTxn = await contractSigner.setDoneTrue(e.currentTarget.id);
+    let id = e.currentTarget.id;
+  try {
+    const toggleTxn = await contractSigner.setDoneTrue(id);
     await toggleTxn.wait();
-    requestAccount(); }
-    catch (error){ 
-      // e.currentTarget.span.innerText = "if you didn't added this note, you can't mark it as done 😒";
-      console.log(error);
-      window.alert(" I think you are trying to do changes in someone else's note, if you didn't added this note, you can't mark it as completed 😒")
-      
-
+    await requestAccount(); 
+   }
+    catch (err) {
+      console.log(err);
     }
+   
+
+ 
   }
    
+
+  setInterval(() => {
+    requestAccount();
+  }, 30000);
    
 
 
 
   return (
     <div>
-      <Header />
+      <Header /> 
+    
 
       <div className="form-group mx-auto" style={{ width: "39rem" }}>
         <label htmlFor="exampleFormControlTextarea1">Add Task</label>
@@ -151,6 +159,8 @@ function App() {
         </Button> }
       </div>
 
+      <div id="errorBox" className="red d-flex justify-content-center mx-auto my-2"></div>
+
       <div> { taskArray.map( (task, i) => (
         <Card
           style={{ width: "39rem" }}
@@ -163,7 +173,7 @@ function App() {
 
             <Card.Text className="d-flex flex-column ">
             <label htmlFor={task.id} >
-              <input type="checkbox" className="my-2" id={task.id} checked={task.done} onChange={(e) => toggleTask(e)}  />
+              <input type="checkbox" className="my-2" id={task.taskid} checked={task.done}  onChange={(e) => toggleTask(e)}  />
               <div >
               {task.content} <br/> <span className="red">  </span>
               </div>
