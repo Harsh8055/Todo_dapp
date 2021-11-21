@@ -102,6 +102,7 @@ function App() {
    }
     catch (err) {
       console.log(err);
+      alert("you can only mark completed to your todo's")
     }
    
 
