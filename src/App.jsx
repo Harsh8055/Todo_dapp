@@ -17,7 +17,8 @@ function App() {
   const [taskArray, updateTask] = useState([]);
   let reverseArr = [];
     useEffect( requestAccount, [bool]);
-
+    useEffect( ()=> console.log("watching todo") , [taskArray]);
+    
  
  
   const checkIfWalletIsConnected = () => {
@@ -104,17 +105,26 @@ function App() {
       console.log(err);
       alert("you can only mark completed to your todo's")
     }
-   
+    
+    setBool(true);
 
  
   }
    
 
-  setInterval(() => {
-    requestAccount();
-  }, 30000);
-   
 
+   
+ const filterTodos = async () => {
+  let ethAccount = await window.ethereum.request({method: "eth_requestAccounts",});
+ console.log(typeof(ethAccount[0]))
+  let array = taskArray;
+   let filterdArray = array.filter((arr)=> arr[1].toLowerCase() == ethAccount[0].toLowerCase());
+   console.log(filterdArray);
+   updateTask(filterdArray);
+   
+   console.log(taskArray);
+
+ } 
 
 
   return (
@@ -154,7 +164,7 @@ function App() {
           Connect Wallet
         </Button> }
          
-        {  connection &&  <Button className="my-2" style={{ margin: "11rem" }}>
+        {  connection &&  <Button className="my-2" style={{ margin: "11rem" }} onClick={filterTodos}>
           {" "}
           Filter Your Todo's{" "}
         </Button> }
