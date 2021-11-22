@@ -43,14 +43,20 @@ function App() {
     checkIfWalletIsConnected();
     // we try here to get the public key of the accounts
     let ethAccounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
+      method: "eth_requestAccounts"
     });
+    let network = await window.ethereum.networkVersion
+    if(network != 4) {
+      alert("You are not connected to rinkeby test network, please change network, refresh the page and try again");
+      return;
+    }
+    console.log(network)
     console.log(ethAccounts);
     setConnection(true);
     // we will load the to do's on blockchain after the wallet is connected
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const contractProvider = new ethers.Contract(contractAddress,Todo.abi, provider);
-
+    
    
     // below is the code for getting data from bc
 
